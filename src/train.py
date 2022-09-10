@@ -43,7 +43,7 @@ from src import utils
 log = utils.get_pylogger(__name__)
 
 
-@utils.task_wrapper
+# @utils.task_wrapper
 def train(cfg: DictConfig) -> Tuple[dict, dict]:
     """Trains the model. Can additionally evaluate on a testset, using best weights obtained during
     training.
@@ -113,7 +113,7 @@ def train(cfg: DictConfig) -> Tuple[dict, dict]:
     return metric_dict, object_dict
 
 
-@hydra.main(version_base="1.2", config_path=root / "configs", config_name="train.yaml")
+@hydra.main(config_path="../configs", config_name="train.yaml")
 def main(cfg: DictConfig) -> Optional[float]:
 
     # train the model

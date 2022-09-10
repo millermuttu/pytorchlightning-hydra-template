@@ -1,3 +1,4 @@
+
 import time
 import warnings
 from importlib.util import find_spec
@@ -31,7 +32,7 @@ def task_wrapper(task_func: Callable) -> Callable:
     def wrap(cfg: DictConfig):
 
         # apply extra utilities
-        extras(cfg)
+        # extras(cfg)
 
         # execute the task
         try:
