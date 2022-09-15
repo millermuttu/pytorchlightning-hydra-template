@@ -11,10 +11,12 @@ COPY . .
 
 FROM python:$PY_VER
 COPY --from=compile-image /root/.local /root/.local
-COPY . .
-# Make sure scripts in .local are usable:
-ENV PATH=/root/.local/bin:$PATH
+WORKDIR /workspace/project
 
-CMD ["python", "src/train.py"]
+# COPY . .
+# # Make sure scripts in .local are usable:
+# ENV PATH=/root/.local/bin:$PATH
+
+# CMD ["python", "src/train.py"]
 
 

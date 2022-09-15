@@ -25,6 +25,7 @@ class CIFAR10LitModule(LightningModule):
     def __init__(
         self,
         optimizer: torch.optim.Optimizer,
+        net: timm.create_model
     ):
         super().__init__()
 
@@ -32,7 +33,7 @@ class CIFAR10LitModule(LightningModule):
         # also ensures init params will be stored in ckpt
         self.save_hyperparameters(logger=False, ignore=["net"])
 
-        self.net = self.create_model()
+        self.net = net
 
         # loss function
         self.criterion = torch.nn.CrossEntropyLoss()

@@ -6,3 +6,8 @@ optimizer:
   lr: 0.001
   weight_decay: 0.0
 
+net:
+  _target_: timm.create_model
+  pretrained: true
+  num_classes: 10
+  model_name: resnet18

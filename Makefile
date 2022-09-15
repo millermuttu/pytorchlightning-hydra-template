@@ -59,3 +59,9 @@ push:
 	    @docker push ${IMAGEFULLNAME}
 
 all: build push
+
+train:
+	docker run --it -v `pwd`:/workspace/project ${IMAGEFULLNAME} python src/train.py
+
+eval:
+	docker run --it -v `pwd`:/workspace/project ${IMAGEFULLNAME} python src/eval.py
