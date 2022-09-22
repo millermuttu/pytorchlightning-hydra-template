@@ -33,6 +33,7 @@ class CIFAR10LitModule(LightningModule):
         # also ensures init params will be stored in ckpt
         self.save_hyperparameters(logger=False, ignore=["net"])
 
+
         self.net = net
 
         # loss function
@@ -64,6 +65,10 @@ class CIFAR10LitModule(LightningModule):
         # by default lightning executes validation step sanity checks before training starts,
         # so we need to make sure val_acc_best doesn't store accuracy from these checks
         self.val_acc_best.reset()
+    
+    # def on_fit_start(self):
+    #     metric_placeholder = {'val/loss': self.val_loss}
+    #     self.logger.log_hyperparams(self.hparams, metrics=metric_placeholder)
 
     def step(self, batch: Any):
         x, y = batch
@@ -78,8 +83,8 @@ class CIFAR10LitModule(LightningModule):
         # update and log metrics
         self.train_loss(loss)
         self.train_acc(preds, targets)
-        self.log("train/loss", self.train_loss, on_step=False, on_epoch=True, prog_bar=True)
-        self.log("train/acc", self.train_acc, on_step=False, on_epoch=True, prog_bar=True)
+        self.log("train/loss", self.train_loss, on_step=True, on_epoch=True, prog_bar=True)
+        self.log("train/acc", self.train_acc, on_step=True, on_epoch=True, prog_bar=True)
 
         # we can return here dict with any tensors
         # and then read it in some callback or in `training_epoch_end()` below
@@ -98,6 +103,9 @@ class CIFAR10LitModule(LightningModule):
         self.val_acc(preds, targets)
         self.log("val/loss", self.val_loss, on_step=False, on_epoch=True, prog_bar=True)
         self.log("val/acc", self.val_acc, on_step=False, on_epoch=True, prog_bar=True)
+        # self.logger.log_metric('hp_metric', loss)
+        self.log('hp_metric', loss)
+        
 
         return {"loss": loss, "preds": preds, "targets": targets}
 
@@ -129,6 +137,15 @@ class CIFAR10LitModule(LightningModule):
         Examples:
             https://pytorch-lightning.readthedocs.io/en/latest/common/lightning_module.html#configure-optimizers
         """
+        print("@@@@@@@@@@@@@@@@@@@@@")
+        print(self.hparams.optimizer)
+        print(type(self.hparams.optimizer))
+        if self.hparams.optimizer == 'RMSProp':
+            self.hparams.optimizer = torch.optim.RMSprop
+        elif self.hparams.optimizer == 'Adam':
+            self.hparams.optimizer = torch.optim.Adam
+        elif self.hparams.optimizer == 'SGD':
+            self.hparams.optimizer = torch.optim.SGD
         return {
             "optimizer": self.hparams.optimizer(params=self.parameters()),
         }
