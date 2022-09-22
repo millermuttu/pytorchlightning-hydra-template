@@ -5,6 +5,7 @@
 
 defaults:
   - override /hydra/sweeper: optuna
+  - override /logger: tensorboard.yaml
 
 # choose metric which will be optimized by Optuna
 # make sure this is the correct name of some metric logged in lightning module!
