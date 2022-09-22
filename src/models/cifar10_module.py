@@ -140,12 +140,12 @@ class CIFAR10LitModule(LightningModule):
         print("@@@@@@@@@@@@@@@@@@@@@")
         print(self.hparams.optimizer)
         print(type(self.hparams.optimizer))
-        if self.hparams.optimizer == 'RMSProp':
-            self.hparams.optimizer = torch.optim.RMSprop
-        elif self.hparams.optimizer == 'Adam':
-            self.hparams.optimizer = torch.optim.Adam
-        elif self.hparams.optimizer == 'SGD':
-            self.hparams.optimizer = torch.optim.SGD
+        # if self.hparams.optimizer == 'RMSProp':
+        #     self.hparams.optimizer = torch.optim.RMSprop
+        # elif self.hparams.optimizer == 'Adam':
+        #     self.hparams.optimizer = torch.optim.Adam
+        # elif self.hparams.optimizer == 'SGD':
+        #     self.hparams.optimizer = torch.optim.SGD
         return {
             "optimizer": self.hparams.optimizer(params=self.parameters()),
         }
