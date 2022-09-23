@@ -153,3 +153,5 @@ logs/
 
 # log outouts
 outputs/
+/data
+/logs
