@@ -97,11 +97,19 @@ def train(cfg: DictConfig) -> Tuple[dict, dict]:
 
     train_metrics = trainer.callback_metrics
 
-    log.info("Scripting model...")
+    # log.info("Scripting model...")
 
-    scrited_model = model.to_torchscript(method='script')
-    torch.jit.save(scrited_model, f"{cfg.paths.output_dir}/model.script.pt")
-    log.info(f"Saving scripted model to {cfg.paths.output_dir}/model.script.pt")
+    # scrited_model = model.to_torchscript(method='script')
+    # torch.jit.save(scrited_model, f"{cfg.paths.output_dir}/model.script.pt")
+    # log.info(f"Saving scripted model to {cfg.paths.output_dir}/model.script.pt")
+
+    log.info("tracing model...")
+    example = torch.rand(1,3, 32,32)
+    model.eval()
+    # scrited_model = model.to_torchscript(method='trace', example_inputs=example)
+    scrited_model = torch.jit.trace(model, example)
+    torch.jit.save(scrited_model, f"{cfg.paths.output_dir}/model.trace.pt")
+    log.info(f"Saving traced model to {cfg.paths.output_dir}/model.trace.pt")
 
     if cfg.get("test"):
         log.info("Starting testing!")

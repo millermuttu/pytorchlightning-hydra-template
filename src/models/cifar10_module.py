@@ -64,6 +64,9 @@ class CIFAR10LitModule(LightningModule):
             ]
         )
 
+        self.mean = torch.tensor((0.5, 0.5, 0.5))
+        self.std = torch.tensor((0.5, 0.5, 0.5))
+
     def forward(self, x: torch.Tensor):
         return self.net(x)
 
@@ -71,7 +74,8 @@ class CIFAR10LitModule(LightningModule):
     def forward_jit(self, x: torch.Tensor):
         with torch.no_grad():
             # transform the inputs
-            x = self.predict_transform(x)
+            # x = self.predict_transform(x)
+            x = (x - self.mean) / self.std
 
             # forward pass
             image_pred = self(x)
