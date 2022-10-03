@@ -6,14 +6,18 @@ RUN apt-get update
 RUN apt-get install -y --no-install-recommends build-essential gcc
 
 COPY requirments_demo.txt ./
-RUN pip install --user --no-cache-dir -r requirements.txt
+RUN pip install --user --no-cache-dir -r requirments_demo.txt
 
 FROM python:$PY_VER
 COPY --from=compile-image /root/.local /root/.local
 WORKDIR /workspace/project
-COPY src/demo_scripted.py configs/* models/* ./
+COPY src/ src/
+COPY configs/ configs/
+COPY models/ models/
+COPY .git pyproject.toml ./
+
 EXPOSE 8080
 
-CMD ["python", "src/demo_scripted.py.py", "-p 8080:8080"]
+CMD ["python", "src/demo_scripted.py", "-p 8080:8080"]
 
 

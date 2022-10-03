@@ -1,0 +1,29 @@
+FROM python:3.8.13-slim-bullseye
+
+RUN export DEBIAN_FRONTEND=noninteractive \
+  && echo "LC_ALL=en_US.UTF-8" >> /etc/environment \
+  && echo "en_US.UTF-8 UTF-8" >> /etc/locale.gen \
+  && echo "LANG=en_US.UTF-8" > /etc/locale.conf \
+  && apt update && apt install -y locales \
+  && locale-gen en_US.UTF-8 \
+  && rm -rf /var/lib/apt/lists/*
+
+RUN pip install \
+  torch==1.12.0+cpu \
+  torchvision==0.13.0+cpu \
+  gradio==3.3.0 \
+  timm \
+  pyrootutils \
+  hydra-core==1.2.0 \
+  hydra-colorlog==1.2.0 \
+  --extra-index-url https://download.pytorch.org/whl/cpu \
+  && rm -rf /root/.cache/pip
+
+# WORKDIR /workspace/project
+COPY src/ src/
+COPY configs/ configs/
+COPY models/ models/
+COPY .git pyproject.toml ./
+EXPOSE 8080
+
+CMD ["python", "src/demo_scripted.py", "-p 8080:8080"]

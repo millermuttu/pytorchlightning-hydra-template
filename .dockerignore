@@ -155,4 +155,9 @@ logs/
 /outputs
 /data
 /logs
-.gitpod.yml
+/tests
+/scripts
+/notebooks
+
+Makefile
+setup.py

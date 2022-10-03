@@ -14,9 +14,9 @@ import hydra
 import gradio as gr
 from omegaconf import DictConfig
 
-from src import utils
+# from src import utils
 
-log = utils.get_pylogger(__name__)
+# log = utils.get_pylogger(__name__)
 
 classes_names = ['airplane','automobile','bird', 'cat', 'deer', 'dog', 'frog', 'horse', 'ship', 'truck']
 
@@ -31,12 +31,12 @@ def demo(cfg: DictConfig) -> Tuple[dict, dict]:
 
     assert cfg.ckpt_path
 
-    log.info("Running Demo")
+    # log.info("Running Demo")
 
-    log.info(f"Instantiating scripted model <{cfg.ckpt_path}>")
+    # log.info(f"Instantiating scripted model <{cfg.ckpt_path}>")
     model = torch.jit.load(cfg.ckpt_path)
 
-    log.info(f"Loaded Model: {model}")
+    # log.info(f"Loaded Model: {model}")
 
     def image_infer(image):
         if image is None:
