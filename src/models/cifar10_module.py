@@ -6,6 +6,8 @@ from torchmetrics import MaxMetric, MeanMetric
 from torchmetrics.classification.accuracy import Accuracy
 import timm
 import torch.nn as nn  
+import torch.nn.functional as F
+from torchvision.transforms import transforms
 
 class CIFAR10LitModule(LightningModule):
     """Example of LightningModule for MNIST classification.
@@ -52,8 +54,31 @@ class CIFAR10LitModule(LightningModule):
         # for tracking best so far validation accuracy
         self.val_acc_best = MaxMetric()
 
+        # self.predict_transform = transforms.Normalize((0.5, 0.5, 0.5), (0.5, 0.5, 0.5))
+
+        self.predict_transform = transforms.Compose(
+            [
+                # transforms.Resize(224),
+                # transforms.ToTensor(),
+                transforms.Normalize((0.5, 0.5, 0.5), (0.5, 0.5, 0.5)),
+            ]
+        )
+
     def forward(self, x: torch.Tensor):
         return self.net(x)
+
+    @torch.jit.export
+    def forward_jit(self, x: torch.Tensor):
+        with torch.no_grad():
+            # transform the inputs
+            x = self.predict_transform(x)
+
+            # forward pass
+            image_pred = self(x)
+
+            preds = F.softmax(image_pred, dim=-1)
+
+        return preds
 
     def create_model(self):
         model = timm.create_model('resnet18', pretrained=True, num_classes=10)

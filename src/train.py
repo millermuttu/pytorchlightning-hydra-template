@@ -37,6 +37,7 @@ import pytorch_lightning as pl
 from omegaconf import DictConfig
 from pytorch_lightning import Callback, LightningDataModule, LightningModule, Trainer
 from pytorch_lightning.loggers import LightningLoggerBase
+import torch
 
 from src import utils
 
@@ -95,6 +96,12 @@ def train(cfg: DictConfig) -> Tuple[dict, dict]:
         trainer.fit(model=model, datamodule=datamodule, ckpt_path=cfg.get("ckpt_path"))
 
     train_metrics = trainer.callback_metrics
+
+    log.info("Scripting model...")
+
+    scrited_model = model.to_torchscript(method='script')
+    torch.jit.save(scrited_model, f"{cfg.paths.output_dir}/model.script.pt")
+    log.info(f"Saving scripted model to {cfg.paths.output_dir}/model.script.pt")
 
     if cfg.get("test"):
         log.info("Starting testing!")

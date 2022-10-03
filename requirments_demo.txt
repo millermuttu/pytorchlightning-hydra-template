@@ -1,0 +1,6 @@
+hydra-core~=1.0.6
+https://download.pytorch.org/whl/cpu/torch-1.12.1%2Bcpu-cp38-cp38-linux_x86_64.whl
+https://download.pytorch.org/whl/cpu/torchvision-0.13.1%2Bcpu-cp38-cp38-linux_x86_64.whl
+timm
+pytorch-lightning~=1.7.4
+gradio=3.3.0

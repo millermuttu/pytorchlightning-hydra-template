@@ -1,0 +1,19 @@
+# multi-stage
+# base image
+ARG PY_VER=3.8-slim
+FROM python:$PY_VER AS compile-image
+RUN apt-get update
+RUN apt-get install -y --no-install-recommends build-essential gcc
+
+COPY requirments_demo.txt ./
+RUN pip install --user --no-cache-dir -r requirements.txt
+
+FROM python:$PY_VER
+COPY --from=compile-image /root/.local /root/.local
+WORKDIR /workspace/project
+COPY src/demo_scripted.py configs/* models/* ./
+EXPOSE 8080
+
+CMD ["python", "src/demo_scripted.py.py", "-p 8080:8080"]
+
+
